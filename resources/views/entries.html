@@ -1,0 +1,51 @@
+     <!--END CAPITAL ADD FORM-->
+
+         <div id="" class="row">
+        <button class="btn btn-info btn-block" id="debit-liability-btn">Create Debit Capital Entry</button>
+           <div class="col-sm-12">
+             <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+           </div>
+           @foreach($capitals as $capital)
+           <div id="" class="col-sm-12">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+           </div>
+           @endforeach
+         </div>
+  <!--end view-->
+        <h2>Credit Purchase Entry</h2>
+        <button style="display:none;"class="btn btn-info btn-block" id="credit-form-btn">Hide Create Purchase Form</button>   
+
+         <div class="row" id="credit-form">
+          <div id="credit-create" class="col-sm-12">
+
+          </div>
+         </div>
+
+
+        <button class="btn btn-info btn-block" id="view-credit-btn">Create  Entry</button>
+          <div id="view-credit" class="row">
+           <div id="view-credit-header"class="col-sm-12">
+             <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+           </div>
+           @foreach($purchases as $purchase)
+           <div id="view-credit-details" class="col-sm-12">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-2"></div>
+           </div>
+           @endforeach
+         </div>

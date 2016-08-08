@@ -1,0 +1,98 @@
+
+<?php
+  session_start();
+
+  if(isset($_GET['receiverId'])){
+    $_SESSION['receiverId'] = $_GET['receiverId'];
+ 
+  }
+?>
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <title>Benvin</title>
+      <meta name="_token" content="{{csrf_token()}}"/>
+      <link rel="stylesheet" href="{{asset('css/chat.css')}}">
+      <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+      <script src="{{asset('js/jquery.js')}}"></script>
+
+   </head>
+  <body id="body">
+ 
+   <div id="chatBig">
+    <div id="users">
+      <label id="senderId" style="display:none;">{{$senderId}}</label>
+      <ul id="chat-list">
+       @foreach($staff as $staff)
+
+           <li id="{{$staff->id}}">{{$staff->username}}</li>
+       @endforeach
+      </ul>
+   </div>
+    <div id="chatMessages"></div>
+    <textarea id="chatText" class="form-control"></textarea>
+    <input type='button' id="sendText"value="Send" class="btn btn-primary">
+   </div>
+   <script type="text/javascript">
+     document.getElementById('chat-list').addEventListener("click",function(e){
+
+      if(e.target && e.target.nodeName =="LI"){
+                $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token':$('meta[name="_token"]').attr('content')
+      }
+     });
+         var receiverId = e.target.id;
+         var senderId = $('#senderId').text();
+              $.ajax({
+                type:"GET",
+                url:"getchat",
+                data:({receiverId:receiverId,senderId:senderId}),
+                success:function(data){
+                
+                }
+             });
+        
+             
+          $('#users').hide();
+          $('#chatMessages').show();
+          $('#chatText').show();
+          $('#sendText').show();
+         
+      } 
+  
+      function getBaseUrl(){
+            var protocol = window.location.protocol;
+                  host =  window.location.host;
+                pathname = window.location.pathname;
+
+             var BASE_URL = protocol + "//" +host + "/";
+            return BASE_URL;
+         }
+   var BASE_URL = getBaseUrl();
+       $('#sendText').click(function(){
+         var chatText = $('#chatText').val();
+         var senderId = $('#senderId').text();
+              $.ajax({
+                type:"POST",
+                url:BASE_URL + "addchat",
+                data:({chatText:chatText,senderId:senderId,receiverId:receiverId}),
+                success:function(data){
+                 $("#chatText").val("");
+                  
+                }
+             });
+      
+       
+      });
+    setInterval(function(){
+      //refresh every 10 seconds
+      $("#chatMessages").load(BASE_URL + "getchat" + "?" + "receiverId"+"="+receiverId+"&"+"senderId"+"="+senderId);
+          },1000);
+
+      $("#chatMessages").load(BASE_URL + "getchat" + "?" + "receiverId"+"="+receiverId+"&"+"senderId"+"="+senderId);
+    });
+   </script>
+  </body>
+</html>
