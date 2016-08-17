@@ -153,7 +153,7 @@
                         </li>
                      
                         <li>
-                            <a href="{{url('/staff')}}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+                            <a href="{{url('/manager')}}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
                         </li>
                         <li>
                             <a href="{{url('/clients')}}"><i class="fa fa-user fa-fw"></i>User Clients</a>

@@ -125,7 +125,12 @@
 			    	
                         {{$product->quantity}}</br>
                       <label><a href="{{url('user/incrementcartitem')}}/{{$product->id}}">[+]</a></label>
-                      <label><a href="{{url('user/decrementcartitem')}}/{{$product->id}}">[-]</a></label>
+                      
+                   
+                      @if($product->quantity > $product->mquantity)
+                         <label><a href="{{url('user/decrementcartitem')}}/{{$product->id}}">[-]</a></label>
+                   
+                      @endif
 			    	</div>
 			    
 			    	<div id="cart-item-unit-price" class="col-sm-1">

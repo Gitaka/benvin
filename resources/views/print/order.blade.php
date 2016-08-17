@@ -41,7 +41,7 @@
     
   }
   table, th, td {
-    border: 3px solid black;
+    border: 1px solid black;
     border-collapse: collapse;
   }
   th, td {
@@ -89,9 +89,9 @@
   </div>
   <div id="order-client">
       <h2>QUOTED TO:</h2>
-        <p>{{$client->username}}</p>
-        <p>{{$client->email}}</p>
-        <p>{{$client->phone}}</p>
+        {{$client->username}}<br>
+        {{$client->email}}<br>
+        {{$client->phone}}<br>
 
       <p>C/O:</p>
       <p>{{$client->name}}</p>
@@ -109,8 +109,8 @@
         <tr>
           <td>{{$order->orderNo}}</td>
           <td>{{$order->description}}</td> 
-          <td>{{number_format($order->amountCharged - ($order->amountCharged * 16)/100,2)}}</td>
-          <td>{{number_format(($order->amountCharged * 16)/100,2)}}</td>   
+          <td>{{number_format(($order->amountCharged * 100)/116,2)}}</td>
+          <td>{{number_format(($order->amountCharged * 16)/116,2)}}</td>   
           <td>{{number_format($order->amountCharged,2)}}</td>
        </tr>
     </table>

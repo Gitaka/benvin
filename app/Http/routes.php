@@ -66,7 +66,6 @@ Route::post('livechat','HomeController@liveChat');
 Route::get('about','HomeController@about');
 Route::get('contact','HomeController@contact');
 
-
 Route::group(['middleware'=>'auth'],function(){
 	   /*+++++CLIENT ROUTES+++++++*/
 		Route::group(['middleware'=>'client'],function(){
@@ -83,36 +82,97 @@ Route::group(['middleware'=>'auth'],function(){
       Route::get('user/vieworders','UserController@vieworders');
       Route::get('invoices','UserController@invoices');
       Route::get('printinvoices/{id}','UserController@printinvoice');
+      Route::get('savedproducts','UserController@myproducts');
+      Route::post('savedproducts','UserController@saveProduct');
+      Route::get('clientmessages','UserController@clientMessages');
 
 		});
+            
+             Route::get('gen/invoice','StaffController@genInvoiceExcel');
+             Route::get('print/invoice/{id}','StaffController@genInvoicePdf');
+             Route::get('gen/order','StaffController@genOrderExcel');
+             Route::get('print/order/{id}','StaffController@genOrderPdf');
 
 		/*+++++Manager Routes++++*/
 		Route::group(['middleware'=>'staff'],function(){
-			Route::get('staff','StaffController@index');
-			Route::get('createstaff','StaffController@createstaff');
-			Route::post('createstaff','StaffController@storestaff');
+                  Route::get('staff','JuniorStaffController@index');
+                  Route::get('staff/clients','JuniorStaffController@clients');
+                  Route::get('viewproducts','JuniorStaffController@products');
 
-      Route::get('createcategory','StaffController@createproductCategory');
-      Route::post('createcategory','StaffController@storeproductCategory');
-			Route::get('createproduct','StaffController@createproduct');
-			Route::post('createproduct','StaffController@storeproducts');
-      Route::post('fproducts','StaffController@featuredProducts');
-            
-			Route::get('createtask','StaffController@createtask');
-			Route::post('createtask','StaffController@storetask');
-			Route::get('tasks','StaffController@viewtasks');
-			Route::get('task/{id}','StaffController@task');
-			Route::get('deletetask/{id}','StaffController@deletetask');
+                  Route::get('staff/tasks','JuniorStaffController@viewtasks');
+                  Route::post('staff/createtask','JuniorStaffController@storetask');
+                  Route::get('staff/task/{id}','JuniorStaffController@task');
+                  Route::get('staff/deletetask/{id}','JuniorStaffController@deletetask');
+                 
+                  Route::get('staff/reports','JuniorStaffController@reports');
+                  Route::post('staff/uploadreports','JuniorStaffController@storereports');
+                  Route::get('staff/viewreport/{id}','JuniorStaffController@viewreport');
+                  Route::get('staff/deletereport/{id}','JuniorStaffController@deletereport');
 
-			Route::get('chats','StaffController@chat');
-			Route::post('addchat','StaffController@addchat');
+                  //Route::get('staff/createnote','StaffController@createnote');
+                  Route::post('staff/createnote','JuniorStaffController@storenote');
+                  Route::get('staff/note','JuniorStaffController@note');
+                  Route::get('staff/deletenote/{id}','JuniorStaffController@deletenote');
+                  Route::get('staff/viewnote/{id}','JuniorStaffController@viewnote');
 
-			Route::get('getchat',array('as'=>'getchat','uses'=>'StaffController@getchat'));
+                  Route::get('staff/createpost','JuniorStaffController@createpost');
+                  Route::post('staff/createpost','JuniorStaffController@storepost');
+                  Route::get('staff/posts','JuniorStaffController@posts');
+                  Route::get('staff/viewpost/{id}','JuniorStaffController@viewpost');
+                  
+                  Route::get('staff/chats','JuniorStaffController@chat');
+                  Route::post('staff/addchat','JuniorStaffController@addchat');
+
+                  Route::get('staff/getchat',array('as'=>'staff/getchat','uses'=>'JuniorStaffController@getchat'));
+
+                  Route::post('staff/storeBroadcast','JuniorStaffController@storeBroadcast');
+                  Route::get('staff/getbroadcast',array('as'=>'staff/getbroadcast','uses'=>'JuniorStaffController@getbroadcast'));
+
+            	    Route::get('view/staff/orders','JuniorStaffController@orders');
+                  Route::post('view/staff/userorders','JuniorStaffController@storeUserOrders');
+                  Route::post('view/staff/orders','JuniorStaffController@storeorders');
+                  Route::get('view/staff/order/{id}','JuniorStaffController@viewOrder');
+                 // Route::post('getuserorder','StaffController@getUserOrder');	
+
+
+                  Route::get('staff/createinvoice','JuniorStaffController@createinvoice');
+                  Route::post('staff/createinvoice','JuniorStaffController@storeinvoice');
+                  Route::post('staff/retriveorder','JuniorStaffController@getorder');
+                  Route::get('staff/show-invoice/{id}','JuniorStaffController@showInvoice');
+                  Route::post('staff/show-invoice','JuniorStaffController@showInvoiceItems');
+               
+
+                   Route::post('staff/clientMesasages','StaffController@storeClientMessage');
+
+
+
+		      Route::group(['middleware'=>'manager'],function(){
+                        //Route::get('manager','managerController@index');
+                  Route::get('manager','StaffController@index');
+                  Route::get('createstaff','StaffController@createstaff');
+                  Route::post('createstaff','StaffController@storestaff');
+
+                  Route::get('createcategory','StaffController@createproductCategory');
+                  Route::post('createcategory','StaffController@storeproductCategory');
+                  Route::get('createproduct','StaffController@createproduct');
+                  Route::post('createproduct','StaffController@storeproducts');
+                  Route::post('fproducts','StaffController@featuredProducts');
+                        
+                  Route::get('createtask','StaffController@createtask');
+                  Route::post('createtask','StaffController@storetask');
+                  Route::get('tasks','StaffController@viewtasks');
+                  Route::get('task/{id}','StaffController@task');
+                  Route::get('deletetask/{id}','StaffController@deletetask');
+
+                  Route::get('chats','StaffController@chat');
+                  Route::post('addchat','StaffController@addchat');
+
+                  Route::get('getchat',array('as'=>'getchat','uses'=>'StaffController@getchat'));
 
                   Route::post('storeBroadcast','StaffController@storeBroadcast');
                   Route::get('getbroadcast',array('as'=>'getbroadcast','uses'=>'StaffController@getbroadcast'));
 
-			            Route::get('uploadreports','StaffController@createreports');
+                  Route::get('uploadreports','StaffController@createreports');
                   Route::post('uploadreports','StaffController@storereports');
                   Route::get('reports','StaffController@reports');
                   Route::get('viewreport/{id}','StaffController@viewreport');
@@ -211,15 +271,17 @@ Route::group(['middleware'=>'auth'],function(){
                   Route::get('gen/liabilityReceivable','StaffController@genLiabilityReceivableExcel');
                   Route::get('gen/assetsReceivable','StaffController@genAssetReceivableExcel');
 
-                 Route::get('gen/invoice','StaffController@genInvoiceExcel');
+                /* Route::get('gen/invoice','StaffController@genInvoiceExcel');
                  Route::get('print/invoice/{id}','StaffController@genInvoicePdf');
 
                  Route::get('gen/order','StaffController@genOrderExcel');
-                 Route::get('print/order/{id}','StaffController@genOrderPdf');
+                 Route::get('print/order/{id}','StaffController@genOrderPdf');*/
 
+                 Route::post('clientMesasages','StaffController@storeClientMessage');
+                 Route::get('viewStaff','StaffController@showStaff');
 
-		      Route::group(['middleware'=>'manager'],function(){
-                        Route::get('manager','managerController@index');
+                 Route::get('analysis','StaffController@analysis');
+
 		        });
 
 		});

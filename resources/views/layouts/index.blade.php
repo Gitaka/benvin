@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <meta name="_token" content="{{csrf_token()}}"/>
     <title>Benvin Admin Panel</title>
    <link href="{{asset('jquery-ui/jquery-ui.css')}}"rel="stylesheet">
     <!-- Bootstrap Core CSS -->
@@ -32,7 +32,7 @@
               Benvin Solutions Ltd
           </div>
           <div class="col-sm-6">
-             <div class="col-sm-8">
+             <div class="col-sm-7">
                             <div class="input-group custom-search-form">
                                 <input type="text" class="form-control" placeholder="Search...">
                                 <span class="input-group-btn">
@@ -42,7 +42,7 @@
                             </span>
                             </div>
              </div>
-             <div id="top-header-welcome"class="col-sm-4" >Welcome Manager</div>
+             <div id="top-header-welcome"class="col-sm-5" >Welcome Manager</div>
           </div>
         </div>
         <nav id="navbar"class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -54,7 +54,7 @@
 
             <ul class="nav navbar-top-links ">
                    <li>
-                            <a href="{{url('/')}}"><i class="fa fa-home fa-fw"></i>Home</a>
+                            <a href="{{url('/manager')}}"><i class="fa fa-home fa-fw"></i>Home</a>
                         </li>
                      <li>
                             <a href="{{url('/')}}"><i class="fa fa-file-text fa-fw"></i>Client Messages</a>
@@ -184,6 +184,9 @@
                       <div id="sidebar-utilities-btn">
 <button type="button"id="sidebar-btn-len"  class="btn" data-toggle="modal" data-target="#addResource"> Add Resource</button>
                       </div>
+                   <div id="sidebar-utilities-btn">
+<button type="button"id="sidebar-btn-len"  class="btn" data-toggle="modal" data-target="#addStaff"> Add Staff</button>
+                      </div>      
                     </div>
 
                     <ul class="nav" id="side-menu">
@@ -192,11 +195,15 @@
                             <!-- /input-group -->
                         </li>
                        <li>
-                            <a href="{{url('/staff')}}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+                            <a href="{{url('/manager')}}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="{{url('/viewStaff')}}"><i class="fa fa-user fa-fw"></i>Staff</a>
                         </li>
                           <li>
                             <a href="{{url('/clients')}}"><i class="fa fa-user fa-fw"></i>User Clients</a>
                         </li>
+
                        <li>
                             <a href="{{url('/staff/orders')}}"><i class="fa fa-file-excel-o fa-fw"></i>Orders</a>
                         </li>
@@ -222,7 +229,7 @@
                             <a href="{{url('/posts')}}"><i class="fa fa-envelope fa-fw"></i>Blog</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Analysis</a>
+                            <a href="{{url('/analysis')}}"><i class="fa fa-bar-chart-o fa-fw"></i>Analysis</a>
                         </li>
                     </ul>
                 </div>
@@ -234,9 +241,91 @@
         <div id="page-wrapper">
           <div id="content" class="row">
                <div id="sidebar-left" class="col-sm-9">
-                   @yield('content')
+              <div class="row" id="info-content">
+                <h2>My Tasks</h2>
+                <div id="tasks" class="col-sm-12">
+
+                   <div id="task-head" class="col-sm-12">
+                     <div id="task-head-title" class="col-sm-2">
+                          Title
+                       </div>
+                       <div id="task-head-task"class="col-sm-5">
+                          Task
+                       </div>
+                        <div id="task-head-start"class="col-sm-2">
+                         Created at
+                       </div>
+                       <div id="task-head-end" class="col-sm-2">
+                        Deadline
+                       </div>
+                       
+                 
+                 </div>
+                @foreach($tasks as $task)
+                 <div id="tasks-details" class="col-sm-12">
+                     <div style="padding:0px;"id="task-title" class="col-sm-2">
+                          {{$task->title}}
+                       </div>
+                       <div id="task-task"class="col-sm-5">
+                         {{$task->task}}
+                       </div>
+                        <div id="task-start"class="col-sm-2">
+                         <dutton class="btn btn-info btn-sm">{{$task->startDate}}</button>
+                       </div>
+                       <div id="task-end" class="col-sm-2">
+                            <dutton class="btn btn-danger btn-sm">{{$task->endDate}}</button>
+                       </div>
+
+                       <div id="product-price" class="col-sm-1">
+                            <dutton class="btn btn-danger btn-sm"><a href="{{url('/deletetask')}}/{{$task->id}}" style="color:#fff;">Delete</a></button>
+                       </div>
+                 
+                 </div>
+                @endforeach
+                <?php echo $tasks->render(); ?>
+            </div>
+             </div>
+            <div id="notes" class="row">
+               <h2>My Notes</h2>
+            <div id="reports" class="col-sm-12">
+            <div id="reports-header" class="col-sm-12">
+              <div id="reports-subject" class="col-sm-2">
+                 Subject
                </div>
-               <div id="sidebar-right" class="col-sm-3">
+               <div id="reports-files" class="col-sm-6">
+                  Note
+               </div>
+               <div id="reports-created-at" class="col-sm-3">
+                CreatedAt
+               </div>
+             
+            </div>
+            @foreach($notes as $note)
+            <div id="reports-details" class="col-sm-12">
+               <div id="reports-subject" class="col-sm-2" style="color:#3c8dbc">
+                {{$note->subject}}</br>
+               </div>
+               <div id="reports-files-notes" class="col-sm-6">
+                  {{$note->note}}
+               </div>
+               <div id="reports-created" class="col-sm-3" style="padding-left:2%;">
+                  {{$note->created_at}}
+               </div>
+               <div id="report-remove" class="col-sm-1">
+
+                 <button class="btn btn-danger btn-sm">
+                   <a href="{{url('deletenote')}}/{{$note->id}}">Delete</a>
+                 </button>
+               </div>
+            </div>
+            @endforeach
+               
+         </div>
+
+
+            </div>
+               </div>
+            <div id="sidebar-right" class="col-sm-3">
                 <div id="utilities">
                   <div id="utilities-btn">
      <button type="button"id="btn-len" class="btn btn-warning" data-toggle="modal" data-target="#myModal">
@@ -261,6 +350,12 @@
   <button type="button"id="btn-len" class="btn btn-warning" data-toggle="modal" data-target="#addInvoice">
                create Invoice</button>
                   </div>
+                  <div id="utilities-btn">
+   
+  <button type="button"id="btn-len" class="btn btn-warning" data-toggle="modal" data-target="#contactClient">
+               Contact Client</button>
+                  </div>
+
                 </div>
 
                 <div id="livefeed">
@@ -268,17 +363,27 @@
                     Live Feed
                   </div>
                   <div id="livefeed-content">
+                    @foreach($liveChats as $livechat)
+                     <div id="live-feed-chats">
+                          <div id="u-lf-c-name">{{$livechat->email}}</div>
+                          <div id="u-lf-c">{{$livechat->description}}</div>
 
+                     </div>
+                    @endforeach
                   </div>
                 </div>
+              <div id="staff-broadcast-header">
+                    Staff Public Chat
+                  </div>
                 <div id="staff-broadcast">
-                  <div id="chat-area"></div>
+                  <label id="senderId" style="display:none">{{Auth::user()->id}}</label>
+                  <div id="chat-area-broadcast"></div>
                   <div id="chat-message" class="row">
                     <div id="write-chat-message" class="col-sm-9">
                       <textarea id="txta-chat" class="form-control"></textarea>
                     </div>
                     <div id="send-chat-message" class="col-sm-2">
-                      <button id="btn-send"class="btn btn-warning btn-sm">Send</button>
+                      <button id="broadcast-btn-send"class="btn btn-warning btn-sm">Send</button>
                     </div>
                   </div>
                 </div>
@@ -297,6 +402,103 @@
     <script src="{{asset('panel/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
     <!-- Custom Theme JavaScript -->
     <script src="{{asset('panel/dist/js/sb-admin-2.js')}}"></script>
+
+<!--***************DATA TOGGLE - create Staff***********************-->
+      <div id="addStaff" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header" >
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">
+                 Create Staff
+
+              </h4>
+            </div>
+            <div class="modal-body">
+
+              <div>
+                  <form class="form-horizontal" role="form" method="POST" action="{{ url('/createstaff') }}">
+                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                      <input type="text" placeholder="Names"class="form-control" name="name" value="{{ old('name')}}"></br>
+                      <input type="email" placeholder="Email"class="form-control" name="email" value="{{ old('email') }}"></br>
+                      <input type="text" placeholder="Phone Number"class="form-control" name="phoneNo" value="{{ old('phoneNo') }}"></br>
+                      <input type="password" placeholder="Password"class="form-control" name="password"></br>
+                      <input type="text" placeholder="Username"class="form-control" name="username" value="{{ old('username') }}"></br>
+                      <select class="form-control" name="accesslevel" placeholder="Department">
+                                         <option value="1">Junior Staff</option>
+                                         <option value="2">Manager</option>
+                                         <option value="3">Director</option>
+                                         <option value="4">Accountant</option>
+                      </select></br>
+
+                  <div class="form-group">
+                    <div class="col-md-2">
+                      <button type="submit" class="btn btn-warning">
+                        Register Staff
+                      </button>
+                    </div>
+                  </div>
+          </form>
+                
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+
+<!--***************DATA TOGGLE - Contact client***********************-->
+      <div id="contactClient" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header" >
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">
+                 Contact Client
+
+              </h4>
+            </div>
+            <div class="modal-body">
+                <div class="checkbox">
+                  <label><input type="checkbox" value="">Send As Email</label>
+                </div>
+              <div>
+                  <form class="form-horizontal" role="form" method="POST" action="{{url('/clientMesasages')}}">
+                        <input id="token"type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                          <input type="email" id="email" placeholder="Client Email"class="form-control" name="email" value="{{ old('email') }}"></br>
+                          <textarea class="form-control" placeholder="Write Message"cols="10" rows="10" name="message"></textarea></br>
+
+  
+                          <div class="form-group">
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-warning">
+                                    Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+    </div>
 
 <!--***************DATA TOGGLE - SIGN UP***********************-->
     
@@ -1417,6 +1619,7 @@
 <script type="text/javascript" src="{{asset('js/creditasset.js')}}"></script>
 <script src="{{asset('jquery-ui/jquery-ui.js')}}"></script>
 <script type="text/javascript">
+
 $(function(){
   $('#modal-new').hide();
     $('#new').attr('class','btn btn-default');
@@ -1477,6 +1680,53 @@ $(function(){
     $('#catProd-btn').attr('class','btn btn-default');
     $('#catf-btn').attr('class','btn btn-warning');
   });
+
+
+    function getBaseUrl(){
+            var protocol = window.location.protocol;
+                  host =  window.location.host;
+                pathname = window.location.pathname;
+
+             var BASE_URL = protocol + "//" +host + "/";
+            return BASE_URL;
+         }
+   var BASE_URL = getBaseUrl();
+
+
+
+    setInterval(function(){
+      //refresh every 10 seconds
+      $("#chat-area-broadcast").load(BASE_URL + "getbroadcast");
+          },1000);
+      $("#chat-area-broadcast").load(BASE_URL + "getbroadcast")
+      
+
+
+  $('#broadcast-btn-send').click(function(){
+      $.ajaxSetup({
+                    headers:{
+                        'X-CSRF-Token':$('meta[name="_token"]').attr('content')
+                    }
+         });
+       var senderId = $('#senderId').text();
+       var publicMessage = $('#txta-chat').val();
+
+       //alert(senderId+'.............'+publicMessage);
+               $.ajax({
+                type:"POST",
+                url:BASE_URL + "storeBroadcast",
+                data:({publicMessage:publicMessage,senderId:senderId,}),
+                success:function(data){
+                  //alert(data);
+                   $("#txta-chat").val("");
+                }
+             });
+     
+   
+     });
+
+
+
 });
 
 </script>

@@ -101,7 +101,7 @@
                                  <h3>{{$product->name}}</h3>
                               </div>
                               <div id="product-price">
-                                <h4><small>Price: </small>KSH {{$product->price}}</h4><label>Minimum Quantity:</label> {{$product->quantity}}
+                                <h4><small>Price: </small>KSH {{$product->price}}</h4><label>Minimum Quantity:</label> {{$product->mquantity}}
                               </div>
                             
                      </div>
@@ -172,15 +172,13 @@
                       <div class="form-group">
                     
                         <div id="modal-form">
-                        <input type="text" placeholder="First Name"class="form-control" name="firstname" value="{{ old('firstname') }}"></br>
-                        <input type="text" placeholder="Last Name"class="form-control" name="lastname" value="{{ old('lastname') }}"></br>
+                        <input type="text" placeholder="Name"class="form-control" name="name" value="{{ old('name') }}"></br>
                         <input type="text"placeholder="Phone Number" class="form-control" name="phoneNo" value="{{ old('phoneNo') }}"></br>
                           <input type="text" class="form-control" placeholder="Email Address" name="email" value="{{ old('email') }}">
                         </br>
                        
                           <input type="password" class="form-control" placeholder="PassWord" name="password">
                        </br>
-                        <input type="text" placeholder="Location"class="form-control" name="location" value="{{ old('location') }}"></br>
                         <input type="text" placeholder="UserName/Organisation"class="form-control" name="username" value="{{ old('username') }}"></br>
                         <input type="hidden" value="0" name="accesslevel">
                          <button type="submit" id="cart-button"class="btn btn-primary">

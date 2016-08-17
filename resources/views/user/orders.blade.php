@@ -64,7 +64,9 @@
     <div class="navbar-collapse collapse">
       <ul  class="nav navbar-nav pull-right" >
         <li><a href="{{url('user')}}"style="color:#fff">Home</a></li>
+         <li><a href="{{url('clientmessages')}}"style="color:#fff">Messages</a></li>
         <li><a href="{{url('/user')}}"style="color:#fff">Products</a></li>
+        <li><a href="{{url('savedproducts')}}"style="color:#fff">SavedProducts</a></li>
         <li><a href="{{url('user/cart')}}"style="color:#fff">Cart</a></li>
         <li><a href="{{url('user/vieworders')}}"style="color:#fff">Orders</a></li>
         <li><a href="{{url('/invoices')}}"style="color:#fff">Invoices</a></li>
@@ -89,6 +91,9 @@
                         <div id="order-item" class="col-sm-3">
                           Item
                         </div>
+                        <div id="order-status" class="col-sm-1">
+                           Total
+                        </div>
                         <div id="order-status" class="col-sm-2">
                            Status
                         </div>
@@ -108,20 +113,20 @@
                         </div>
                         <div id="order-item" class="col-sm-3">
                            {{$order->description}}
-
                         </div>
-                        <div id="order-status" class="col-sm-2">
-                           
-                          <dutton class="btn btn-info btn-sm">{{$order->status}}</button>
+                        <div id="order-status" class="col-sm-1">
+                           <dutton class="btn btn-info btn-sm">{{number_format($order->amountCharged,2)}}</button>
+                          
+                        </div>
+                           <div id="order-status" class="col-sm-2">
+                           <dutton class="btn btn-info btn-sm">{{$order->status}}</button>
+                        
                         </div>
                           <div id="order-status" class="col-sm-2">
                            
                            <dutton class="btn btn-warning btn-sm">{{$order->deliveryDeadline}}</button>
                         </div>
-                           <div id="order-status" class="col-sm-2">
-                           
-                           <!--<dutton class="btn btn-danger btn-sm">Delete</button>-->
-                        </div>
+
                       </div>
                     
    @endforeach

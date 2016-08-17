@@ -1,8 +1,9 @@
 <html>
 	<head>
 		<title>Benvin Printers</title>	
+    <meta name="_token" content="{{csrf_token()}}"/>
 		<link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
-    <!--<link rel="stylesheet" href="pality/assets/css/style.css">-->
+    
 		<link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}">
 		<link rel="stylesheet" type="text/css" href="{{asset('css/bootstrap.min.css')}}">
 		 <link rel="stylesheet" href="{{asset('font-awesome/css/font-awesome.min.css')}}">
@@ -64,7 +65,9 @@
     <div class="navbar-collapse collapse">
       <ul  class="nav navbar-nav pull-right" >
         <li><a href="{{url('user')}}"style="color:#fff">Home</a></li>
-        <li><a href="{{url('/products')}}"style="color:#fff">Product-Categories</a></li>
+        <li><a href="{{url('clientmessages')}}"style="color:#fff">Messages</a></li>
+        <li><a href="{{url('/user')}}"style="color:#fff">Products</a></li>
+        <li><a href="{{url('savedproducts')}}"style="color:#fff">SavedProducts</a></li>
         <li><a href="{{url('user/cart')}}"style="color:#fff">Cart</a></li>
         <li><a href="{{url('user/vieworders')}}"style="color:#fff">Orders</a></li>
         <li><a href="{{url('/invoices')}}"style="color:#fff">Invoices</a></li>
@@ -94,19 +97,26 @@
                          <h3>{{$product->name}}</h3>
                       </div>
                       <div id="product-price">
-                        <h4><small>Price: </small>KSH {{$product->price}}</h4><label>Minimum Quantity:</label>  {{$product->quantity}}
+                        <h4><small>Price: </small>KSH {{$product->price}}</h4>
+                        Minimum Quantity:<label id="mq_{{$product->id}}" style="display:none">{{$product->mquantity}}</label>
+                        <label id="quantity_{{$product->id}}">{{$product->mquantity}}</label>
+                
+                          <button  class="inc btn btn-sm btn-default"> + <label style="display:none">{{$product->mquantity}} {{$product->id}}</label></button>
+                          <button  class="dec btn btn-sm btn-default"> - <label style="display:none">{{$product->mquantity}} {{$product->id}}</label></button>
+
+
                       </div>
                     
 			       </div>
 			       <div id="cart-details">
-                     <div class="col-sm-3">
+                    <!-- <div class="col-sm-3">
                       <i class="fa fa-heart fa-2x circle"><small>Like</small></i>
-                     </div>
-                     <div class="col-sm-3">
-                      <i class="fa fa-save fa-2x circle"><small>Save</small></i>
+                     </div>-->
+                     <div class="col-sm-6">
+                      <i class="fa fa-save fa-2x circle save"><small>Save<label style="display:none">_{{$product->id}}_{{Auth::user()->id}}</label></small></i>
                      </div>
                      <div class="col-sm-6">
-                     <label id="label-cart-style"><a class="addCartItems"href="{{url('user/cart/additem')}}/{{$product->id}}-{{$product->quantity}}">ADD TO CART<h6 style="display:none">_{{$product->id}}</h6></a></label>
+                     <label id="label-cart-style"><a class="addCartItems"href="{{url('user/cart/additem')}}/{{$product->id}}-{{$product->mquantity}}">ADD TO CART<h6 style="display:none">_{{$product->id}}</h6></a></label>
                      
                      </div>
 			       </div>

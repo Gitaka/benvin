@@ -268,6 +268,46 @@
 	border:1px solid #d8d8d8;
 	border-radius:5px;
 }
+/*******************Messages*****************************/
+#messages-header{
+	
+	background:blue;
+}
+#messages{
+    margin-left:5%;
+    margin-right:5%;
+    margin-top:10%;
+	margin-bottom:10%;
+	padding-bottom:5%;
+   padding-left:2%;
+ padding-right:2%;
+    border-top:3px solid #3c8dbc;
+    border-right:1px solid #d8d8d8;
+   border-left:1px solid #d8d8d8;
+   border-bottom:1px solid #d8d8d8;
+   border-radius:5px;
+}
+#ucm{
+    border-bottom:2px solid #d8d8d8;
+	padding-top:2%;
+	padding-bottom:1%;
+
+}
+#client-user-message{
+	padding-left:5%;
+	padding-top:3%;
+}
+#user-message{
+  border:1px solid #d8d8d8;
+  padding-top:1%;
+  padding-bottom:1%;
+  border-radius:5px;
+
+}
+#date-sent{
+	color:#187BBD;
+	padding-top:1%;
+}
 
 /*****************END NAV COLLAPSE MEDIA QUERIES ********/
 #products{
@@ -296,6 +336,7 @@
 }
 #product-price{
  margin-top:2%;
+ margin-bottom:2%;
 }
 #cart-details{
 	margin-top:5%;

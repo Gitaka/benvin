@@ -16,7 +16,7 @@ $(document).ready(function(){
        desc = $('#desc').val();
    var token = $('#token').val();
 	$('#chat-button').click(function(){
-	
+
 		        $.ajax({
 					type:"POST",
 					url:BASE_URL+"livechat",

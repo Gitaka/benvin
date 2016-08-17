@@ -64,7 +64,9 @@
     <div class="navbar-collapse collapse">
       <ul  class="nav navbar-nav pull-right" >
         <li><a href="{{url('user')}}"style="color:#fff">Home</a></li>
+          <li><a href="{{url('clientmessages')}}"style="color:#fff">Messages</a></li>
         <li><a href="{{url('/user')}}"style="color:#fff">Products</a></li>
+        <li><a href="{{url('savedproducts')}}"style="color:#fff">SavedProducts</a></li>
         <li><a href="{{url('user/cart')}}"style="color:#fff">Cart</a></li>
         <li><a href="{{url('user/vieworders')}}"style="color:#fff">Orders</a></li>
         <li><a href="{{url('/invoices')}}"style="color:#fff">Invoices</a></li>
@@ -88,6 +90,9 @@
                        <div id="invoice-item"class="col-sm-3">
                         Items
                        </div>
+                      <div id="invoice-vat" class="col-sm-1">
+                       Sub-Total
+                       </div>
                        <div id="invoice-vat" class="col-sm-1">
                        VAT(16%)
                        </div>
@@ -110,13 +115,17 @@
                        <div id="invoice-items"class="col-sm-3">
                          {{$invoice->description}}
                        </div>
+                        <div id="invoice-vat" class="col-sm-1">
+                      
+                        <button class="btn btn-sm btn-warning">{{number_format(($invoice->amountCharged * 100)/116,2)}}</button>
+                       </div>
                        <div id="invoice-vat" class="col-sm-1">
                       
-                        <button class="btn btn-sm btn-warning">{{$invoice->vat}}</button>
+                        <button class="btn btn-sm btn-warning">{{number_format(($invoice->amountCharged * 16)/116,2)}}</button>
                        </div>
                        <div id="invoice-subtotal" class="col-sm-2">
                        
-                          <button class="btn btn-sm btn-info">{{$invoice->amountCharged}}</button>
+                          <button class="btn btn-sm btn-info">{{number_format($invoice->amountCharged,2)}}</button>
                        </div>
     
                        <div id="invoice-print" class="col-sm-2">

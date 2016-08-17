@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\SavedProduct;
 use App\Product;
 use App\User;
 use App\Cart;
@@ -83,7 +84,7 @@ class UserController extends Controller
 
     
     $cartitems = DB::table('cartitems')->where('cart_id','=',$cartId)->get();
-    $products = DB::select(DB::raw('SELECT cartitems.id,cartitems.quantity,cartitems.cart_id,cartitems.product_id,products.name,products.description,products.price,products.productImg
+    $products = DB::select(DB::raw('SELECT cartitems.id,cartitems.quantity,cartitems.cart_id,cartitems.product_id,products.name,products.mquantity,products.description,products.price,products.productImg
                 FROM cartitems INNER JOIN products on cartitems.product_id = products.id WHERE cartitems.cart_id = '.$cartId.' '));
   
     return View::make('user.cart')
@@ -259,43 +260,66 @@ public function printinvoice($id){
     $invoices = Invoice::find($id);
     $orders = json_decode($invoices->orderNo);
 
-
+    $client = DB::table('users')->where('email','=',$invoices->email)->get();
       $orderItems = array();
-      $items = array();
+       $items = array();
         foreach($orders as $order){
              $items[] = DB::table('orders')->where('orderNo','=',$order)->get();
            }
-              $totalCharged = null;
-              $totalPaid = null;
-              $totalBalance = null;
-              $desc = '';
 
-              foreach($orderItems as $items){
-                foreach($items as $item){
-                  $totalCharged += $item->amountCharged;
-                  $totalPaid += $item->amountPaid;
-                  $totalBalance = $totalCharged - $totalPaid;
-                  $desc .= $item->description.',';
-          
 
-                }
-             }
+      $totalCharged = null;
+       foreach($items as $item){
+         foreach($item as $itemInfo)
+           $totalCharged += $itemInfo->amountCharged;
+       }
 
-            //$invoiceData = array();
-            $orderItems['indescription'] = $desc;
-            $orderItems['inbalance'] = $totalBalance;
-             $orderItems['inamountPaid'] = $totalPaid;
-             $orderItems['inamountCharged'] = $totalCharged;
+    $orderItems['items'] = $items;
+    $orderItems['invoiceNo'] = $invoices->invoiceNo;
+    $orderItems['deliveryNo'] = $invoices->deliveryNo;
+    $orderItems['orders'] = implode(',',json_decode($invoices->orderNo));
+    $orderItems['date'] = $invoices->created_at;
+    $orderItems['client'] = $client;
+    $orderItems['totalCharged'] = $totalCharged;
 
-       $orderItems['client'] = DB::table('users')->where('email','=',$invoices->email)->get();
-
-             $orderItems['invoiceNo'] = $invoices->invoiceNo;
-             $orderItems['invoiceDate'] = $invoices->created_at;
-             $orderItems['invoiceOrder']= $invoices->orderNo;
-             $orderItems['deliveryNo'] = $invoices->deliveryNo;
-             $orderItems['items']= $items;
-    $pdf = PDF::loadView('print.userInvoice', $orderItems);
-    return $pdf->stream();
-   //return $orderItems;
+    $pdf = PDF::loadView('print.userInvoice',$orderItems);
+     return $pdf->stream();
+     
   }
+
+public function myproducts(){
+  $saved = DB::table('saved_products')->where('userId','=',Auth::user()->id)->get();
+  $productSaves = array();
+  foreach($saved as $save)
+     $productSaves [] = $save->productId;
+  
+  $products = array();
+   foreach($productSaves as $productId){
+      $products[] = DB::table('products')->where('id','=',$productId)->get();
+   }
+
+  return View::make('user.SavedProducts')
+              ->with('products',$products);
+
+        
+
+}
+
+public function saveProduct(Request $request){
+   $productId = $request->get('prodId');
+   $userId = $request->get('userId');
+   SavedProduct::create([
+       'userId'=>$userId,
+       'productId'=>$productId,
+    ]);
+   return 'product Saved';
+}
+
+public function clientMessages(){
+  $messages = DB::table('client_messages')->where('email','=',Auth::user()->email)->paginate(3);
+   return View::make('user.messages')
+              ->with('messages',$messages);
+}
+
+
 }

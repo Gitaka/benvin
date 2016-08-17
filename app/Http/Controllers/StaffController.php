@@ -36,6 +36,8 @@ use App\Http\Requests\productsRequests;
 use App\Http\Requests\TasksRequest;
 use App\Helpers\ImageResize;
 use App\Helpers\Ratio;
+use App\ClientMessage;
+use App\SavedProduct;
 
 class StaffController extends Controller
 {
@@ -58,6 +60,12 @@ class StaffController extends Controller
     $assets = DB::table('assets')->orderBy('id')->get();
     $liabilities = DB::table('liabilities')->get();
     $cpOrders = DB::table('orders')->get();
+    $tasks = DB::table('tasks')->where('userId','=',Auth::user()->id)
+             ->orWhere('staffId','=',Auth::user()->id)->orderBy('id','desc')->paginate(5);
+    $notes =  DB::table('notes')->where('userId','=',Auth::user()->id)->orderBy('id','desc')->take(5)->get();
+    
+    $liveChats = DB::table('livechats')->orderBy('id','desc')->get();
+
    	return View::make('layouts.index')
                     ->with('staffs',$staffs)
                     ->with('taskOrders',$taskOrders)
@@ -70,8 +78,12 @@ class StaffController extends Controller
                     ->with('assets',$assets)
                     ->with('salesOrders',$salesOrders)
                     ->with('purchaseOrders',$cpOrders)
-                    ->with('liabilities',$liabilities);
-                    
+                    ->with('liabilities',$liabilities)
+                    ->with('notes',$notes)
+                    ->with('tasks',$tasks)
+                    ->with('liveChats',$liveChats);
+
+                   
    }
 
 
@@ -85,19 +97,16 @@ class StaffController extends Controller
          }else{
            User::create(
                 [
-                 'firstname'=>$request->get('firstname'),
-                 'lastname'=>$request->get('lastname'),
+                 'name'=>$request->get('name'),
                  'email'=>$request->get('email'),
+                 'phone'=>$request->get('phoneNo'),
                  'password'=>bcrypt($request->get('password')),
-                 'location'=>$request->get('location'),
                  'username'=>$request->get('username'),
                  'AccessLevel'=>$request->get('accesslevel'),
                 ]
             );
              Session::flash('successRegister','Registerd Successfully');
-           return Redirect::to('auth/login');
-
-   
+           return Redirect::to('manager');
 
          }
     }
@@ -112,7 +121,7 @@ class StaffController extends Controller
       $features = Category::find($catId);
       $features->isFeatured = 1;
       $features->save();
-       return Redirect::to('staff');
+       return Redirect::to('manager');
    }
    public function storeproductCategory(Request $request){
             $this->validate($request,[
@@ -153,7 +162,7 @@ class StaffController extends Controller
                         ]);
                       Session::flash('addcategory','Product Category Added Successfully');
 
-                     return Redirect::to('staff');
+                     return Redirect::to('manager');
                      //return $resized;
                 }
           }
@@ -195,14 +204,14 @@ class StaffController extends Controller
                            'name'=>$request->get('productname'),
                            'category'=>$request->get('category'),
                            'description'=>$request->get('description'),
-                           'quantity'=>$request->get('quantity'),
+                           'mquantity'=>$request->get('quantity'),
                            'price'=>$request->get('price'),
                            'productImg'=>$resized,
                           
                         ]);
                       Session::flash('addproduct','Product Added Successfully');
 
-                     return Redirect::to('staff');
+                     return Redirect::to('manager');
                      
                 }
    	     }
@@ -252,7 +261,7 @@ class StaffController extends Controller
 
    public function viewtasks(){
       $tasks=DB::table('tasks')->where('userId','=',Auth::user()->id)
-                              ->orWhere('staffId','=',Auth::user()->id)->orderBy('id','desc')->paginate(1);
+                              ->orWhere('staffId','=',Auth::user()->id)->orderBy('id','desc')->paginate(5);
       $clients=DB::table('users')->where('accessLevel','=','0')->get();
       $staffs=DB::table('users')->where('accessLevel','>','0')->get();
       $orders = DB::table('orders')->get();
@@ -422,7 +431,7 @@ public function storereports(Request $request){
                   'files'=>json_encode($done),
                 ]);
               Session::flash('report','Report Created');
-              return Redirect::to('staff');
+              return Redirect::to('manager');
             
          
           }
@@ -468,7 +477,7 @@ public function storenote(Request $request){
             'note'=>$request->note,
           ]);
         Session::flash('note','Note Created');
-        return Redirect::to('staff');
+        return Redirect::to('manager');
     }
 }
 
@@ -537,7 +546,7 @@ public function storepost(Request $request){
                   'imgFiles'=>json_encode($done),
                 ]);
               Session::flash('post','Post Created');
-              return Redirect::to('staff');
+              return Redirect::to('manager');
             
          
           }
@@ -559,6 +568,7 @@ public function getUserOrder(Request $request){
    $orders = DB::table('orders')->where('orderNo','=',$orderId)->get();
    return $orders;
 }
+
 public function createinvoice(){
   $orders = DB::table('orders')->where('balance','>',0)->where('status','!=','invoiced')->get();
   $invoices = DB::table('invoices')->orderBy('id','desc')->paginate(5);
@@ -927,7 +937,7 @@ public function storesales(Request $request){
                         'balance'=> $request->get('balance') - $request->get('amount'),
                         ]);
                      Session::flash('sale','Sale Debit Created');
-                      return Redirect::to('staff');
+                      return Redirect::to('manager');
            }
             
 
@@ -963,7 +973,7 @@ public function storesales(Request $request){
                            $sales->save();
 
                           Session::flash('sale','Sale Debit Created');
-                          return Redirect::to('staff');
+                          return Redirect::to('manager');
 
 
                      }else{
@@ -990,7 +1000,7 @@ public function storesales(Request $request){
                           ]);
 
                           Session::flash('sale','Sale Debit Created');
-                          return Redirect::to('staff');
+                          return Redirect::to('manager');
                      }
               }
 
@@ -1054,7 +1064,7 @@ public function storesales(Request $request){
 
 
          Session::flash('sale','Sale Debit Created');
-         return Redirect::to('staff');
+         return Redirect::to('manager');
 
          }
          
@@ -1089,7 +1099,7 @@ public function storesales(Request $request){
                   'balance'=> $balance,
                  ]);
          Session::flash('sale','Sale Debit Created');
-         return Redirect::to('staff');
+         return Redirect::to('manager');
       }
 
 
@@ -1144,7 +1154,7 @@ public function storeasset(Request $request){
 
           ]);
        Session::flash('asset','Asset Debit Created');
-       return Redirect::to('staff');
+       return Redirect::to('manager');
 
      }
 }
@@ -1209,7 +1219,7 @@ public function storeliability(Request $request){
 
           ]);
        Session::flash('liability','Liability Debit Created');
-       return Redirect::to('staff');
+       return Redirect::to('manager');
        //return $request->get('intrest');
      }
 }
@@ -1258,7 +1268,7 @@ public function storecapital(Request $request){
 
           ]);
        Session::flash('capital','Capital Debit Created');
-       return Redirect::to('staff');
+       return Redirect::to('manager');
      }
    }
 
@@ -1311,7 +1321,7 @@ public function storecreditliability(Request $request){
             'phone'=>$request->get('phone'),
             ]);
                 Session::flash('creditliability','Liability Credit Created');
-                return Redirect::to('staff');
+                return Redirect::to('manager');
       }
  }
 
@@ -1360,7 +1370,7 @@ public function storecreditliability(Request $request){
             'phone'=>$request->get('phone'),
             ]);
                 Session::flash('creditasset','Asset Credit Created');
-                return Redirect::to('staff');
+                return Redirect::to('manager');
               
       }
  }
@@ -1409,7 +1419,7 @@ public function storeexpense(Request $request){
             'phone'=>$request->get('phone'),
             ]);
                 Session::flash('expense','Expense Credit Created');
-                return Redirect::to('staff');
+                return Redirect::to('manager');
               
       }
  }
@@ -1481,7 +1491,7 @@ public function storepurchase(Request $request){
                 'phone'=>$phone,
               ]);
               Session::flash('purchase','Purchase Credit Created');
-                return Redirect::to('staff');
+                return Redirect::to('manager');
                 
            
       }
@@ -2079,9 +2089,33 @@ public function genInvoiceExcel(){
 }
 
 public function genInvoicePdf($id){
-   $invoice = Invoice::find($id);
 
-   $pdf = PDF::loadView('print.invoice', $invoice);
+    $invoices = Invoice::find($id);
+    $orders = json_decode($invoices->orderNo);
+
+    $client = DB::table('users')->where('email','=',$invoices->email)->get();
+      $orderItems = array();
+       $items = array();
+        foreach($orders as $order){
+             $items[] = DB::table('orders')->where('orderNo','=',$order)->get();
+           }
+
+
+      $totalCharged = null;
+       foreach($items as $item){
+         foreach($item as $itemInfo)
+           $totalCharged += $itemInfo->amountCharged;
+       }
+
+    $orderItems['items'] = $items;
+    $orderItems['invoiceNo'] = $invoices->invoiceNo;
+    $orderItems['deliveryNo'] = $invoices->deliveryNo;
+    $orderItems['orders'] = implode(',',json_decode($invoices->orderNo));
+    $orderItems['date'] = $invoices->created_at;
+    $orderItems['client'] = $client;
+    $orderItems['totalCharged'] = $totalCharged;
+
+   $pdf = PDF::loadView('print.invoice', $orderItems);
    return $pdf->stream();
  }
 
@@ -2116,4 +2150,33 @@ public function genInvoicePdf($id){
        return $pdf->stream();
 
   }
+
+
+public function storeClientMessage(Request $request){
+   $message = $request->get('message');
+   $email = $request->get('email');
+   
+   ClientMessage::create([
+       'email' => $email,
+       'message'=> $message,
+    ]); 
+   return Redirect::to('manager');
+ }
+public function showStaff(){
+  $staff = DB::table('users')->where('AccessLevel','>',0)->paginate(3);
+  return View::make('staff.staff')
+               ->with('staffs',$staff);
+}
+
+public function analysis(){
+  $savedProducts = SavedProduct::all();
+  $products = array();
+  foreach($savedProducts as $saves){
+    $products[] = DB::table('products')->where('id','=',$saves->productId)->get();
+  }
+  return $products;
+}
+
+
+
 }

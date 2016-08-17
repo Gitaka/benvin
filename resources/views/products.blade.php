@@ -72,7 +72,7 @@
         <li><a href="{{url('contact')}}">Contact</a></li>
         <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> Portal <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="{{url('/auth/login')}}"><i class="fa fa-wrench"></i>  Sign In</a></li>
+            <li><a href="{{url('/auth/login')}}"><i class="fa fa-wrench"></i>  Sign Out</a></li>
             <li class="divider"></li>
             <li><a href="{{url('auth/register')}}"><i class="fa fa-user"></i>  Register</a></li>
           </ul>

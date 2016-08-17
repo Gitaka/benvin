@@ -34,7 +34,7 @@
 
             <ul class="nav navbar-top-links navbar-right">
                     <li>
-                            <a href="{{url('/')}}"><i class="fa fa-home fa-fw"></i>Home</a>
+                            <a href="{{url('/manager')}}"><i class="fa fa-home fa-fw"></i>Home</a>
                       </li>
                 <li>
                         <a href="{{url('/createinvoice')}}"><i class="fa fa-briefcase fa-fw"></i>Invoice</a>
@@ -150,7 +150,7 @@
                         </li>
                   
                            <li>
-                            <a href="{{url('/staff')}}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+                            <a href="{{url('/manager')}}"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
                         </li>
                         <li>
                             <a href="{{url('/clients')}}"><i class="fa fa-user fa-fw"></i>User Clients</a>
